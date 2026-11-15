@@ -1,0 +1,47 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+interface BaseMessage {
+  +render(): str
+}
+
+class Message {
+  -text: str
+  +render(): str
+}
+
+class MessageDecorator {
+  -message: BaseMessage
+  +render(): str
+}
+
+class HeaderDecorator
+class SignatureDecorator
+class DateDecorator
+class Base64Decorator
+
+class ProtectedMessageProxy {
+  -message: BaseMessage
+  -user: UserContext
+  -policy: AccessPolicy
+  +render(): str
+}
+
+class UserContext
+class AccessPolicy {
+  +is_allowed(user): bool
+}
+
+BaseMessage <|.. Message
+BaseMessage <|.. MessageDecorator
+MessageDecorator <|-- HeaderDecorator
+MessageDecorator <|-- SignatureDecorator
+MessageDecorator <|-- DateDecorator
+MessageDecorator <|-- Base64Decorator
+MessageDecorator o-- BaseMessage
+
+BaseMessage <|.. ProtectedMessageProxy
+ProtectedMessageProxy o-- BaseMessage
+ProtectedMessageProxy --> UserContext
+ProtectedMessageProxy --> AccessPolicy
+@enduml
